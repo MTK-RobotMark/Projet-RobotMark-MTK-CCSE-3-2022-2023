@@ -5,8 +5,9 @@
 #define VmoyG 700
 #define VmoyD 730
 #define Angle90 420
-#define Imoy 490
+#define Imoy 0.49
 #define Inom 1
+#define Vout 7.2
 
 
 //Entrées analogiques
@@ -97,8 +98,7 @@ void affichage() {
   float distance_Robot = (((Vf_R / 1180) + (Vf_L / 1150)) * 0.1);
   long NbtourG = (Vf_L / 1150);  //Nb de tours roue gauche
   long NbtourD = (Vf_R / 1180);  //Nb de tours roue droite
-  Vout = Imoy * 2;
-  Energie = Vout * Imoy * Duree_h;
+  Energie = (Vout * Imoy * Duree_h)*3600;
 
   while (1) {
     if ((myrobot.getJoystickY()) < 358) {
@@ -211,7 +211,7 @@ void setup() {
 
   myrobot.setLedBarLevel(myrobot.getBatteryLevel());
 
-  while (myrobot.getInfrared() || (not(myrobot.getJoystickClic()))) {
+  while (myrobot.getInfrared() || (myrobot.getJoystickY())>358) {
     MoteurGD(Stop, Stop);
   }
   delay(1000);
@@ -238,28 +238,28 @@ void loop() {
   if (arret == false) {
     millis();
 
-    if (DistanceCapteurDroite > 80 && DistanceCapteurGauche > 80) {  // Si le robot est au centre du couloir il va tout droit
-      MoteurGD(VmoyG, VmoyD + 2);
+    if (DistanceCapteurDroite > 75 && DistanceCapteurGauche > 75) {  // Si le robot est au centre du couloir il va tout droit
+      MoteurGD(VmoyG, VmoyD);
       millis();  // La fonction millis() permet l'execution rapide de chaque boucle if et donc une presque exécution simultané des ces mêmes boucles
     }
 
-    if (DistanceCapteurDroite < 80) {  // Si le robot est proche du mur droite il tourne légèrement à gauche
-      MoteurGD(VmoyG, VmoyD + 27);
+    if (DistanceCapteurDroite < 70) {  // Si le robot est proche du mur droite il tourne légèrement à gauche
+      MoteurGD(VmoyG, VmoyD + 17);
       millis();
     }
 
-    if (DistanceCapteurGauche < 80) {  // Si le robot est proche du mur gauche il tourne légèrement à droite
-      MoteurGD(VmoyG + 2, VmoyD);
+    if (DistanceCapteurGauche < 70) {  // Si le robot est proche du mur gauche il tourne légèrement à droite
+      MoteurGD(VmoyG + 17, VmoyD);
       millis();
     }
 
     if (DistanceCapteurAvant < 329 && DistanceCapteurGauche > 90) {
-      MoteurGD(VmoyG, VmoyD + 25);
+      MoteurGD(VmoyG, VmoyD + 28);
       millis();
     }
 
     if (DistanceCapteurGauche < 110 && DistanceCapteurDroite > 100) {
-      MoteurGD(VmoyG + 60, VmoyD);
+      MoteurGD(VmoyG + 75, VmoyD);
       millis();
     }
 
